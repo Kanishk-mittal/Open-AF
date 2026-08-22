@@ -1,0 +1,1 @@
+Aim of this project is to create a web based GUI for android forensic analysis specially for students which works by fetching data form a virtual device over network using ADB(Android Debugging Bridge)
