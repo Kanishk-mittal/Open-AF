@@ -1,9 +1,43 @@
+import uuid
+from typing import Optional
+from models.project_model import ProjectMetadataCreate, ProjectMetadataModel
+from repository.project_repository import ProjectRepository
+from services.project_init_service import ProjectInit
+
+
 class ProjectService:
-    def __init__(self):
-        self.projects = []
+    def __init__(self, repository: ProjectRepository):
+        self.repository = repository
 
-    def get_projects(self):
-        return self.projects
+    async def initialize_project(
+        self, 
+        payload: ProjectMetadataCreate, 
+        device_serial: Optional[str] = None
+    ) -> ProjectMetadataModel:
+        # 1. Generate unique project ID
+        project_id = str(uuid.uuid4())
 
-    def add_project(self, project):
-        self.projects.append(project)
+        metadata_dict = payload.model_dump()
+        serial_to_use = device_serial or payload.device_serial
+        if serial_to_use is not None:
+            metadata_dict["device_serial"] = serial_to_use
+
+        # 2. Forward payload to repository
+        created_metadata = await self.repository.create_project_metadata(
+            project_id=project_id, 
+            metadata_data=metadata_dict
+        )
+
+        # 3. Save target device information in 'device_info' collection if serial provided
+        if serial_to_use:
+            try:
+                db = self.repository.get_database(project_id)
+                await ProjectInit.save_device_info(device_serial=serial_to_use, project_db=db)
+            except Exception as e:
+                print(f"Warning: Failed to capture device info for {serial_to_use}: {e}")
+
+        # 4. Print initialization message to terminal
+        print(f"initializing project: OpenAF_{project_id}")
+
+        # 5. Return metadata along with ID
+        return created_metadata
