@@ -19,6 +19,14 @@ async def list_projects(
 ):
     return await service.list_projects()
 
+@router.get("/{project_id}", response_model=ProjectMetadataModel, status_code=status.HTTP_200_OK)
+async def get_project_metadata(
+    project_id: str,
+    service: ProjectService = Depends(get_service)
+):
+    return await service.get_project_metadata(project_id)
+
+
 @router.post("", response_model=ProjectMetadataModel, status_code=status.HTTP_201_CREATED)
 async def create_project(
     payload: ProjectMetadataCreate,

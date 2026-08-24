@@ -52,3 +52,24 @@ class ProjectRepository:
                         )
                     )
         return projects
+
+    async def get_project_metadata(self, project_id: str) -> ProjectMetadataModel:
+        db_name = f"OpenAF_{project_id}"
+        db_names = await db_manager.client.list_database_names()
+        if db_name not in db_names:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Project '{project_id}' not found."
+            )
+
+        db = self.get_database(project_id)
+        collection = db["metadata"]
+        doc = await collection.find_one({})
+        if not doc:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Project '{project_id}' not found."
+            )
+
+        doc["_id"] = str(doc["_id"])
+        return ProjectMetadataModel.model_validate(doc)

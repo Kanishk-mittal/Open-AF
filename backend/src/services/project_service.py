@@ -12,6 +12,10 @@ class ProjectService:
     async def list_projects(self) -> list[ProjectListItem]:
         return await self.repository.list_projects()
 
+    async def get_project_metadata(self, project_id: str) -> ProjectMetadataModel:
+        return await self.repository.get_project_metadata(project_id)
+
+
     async def initialize_project(
         self, 
         payload: ProjectMetadataCreate, 

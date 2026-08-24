@@ -18,7 +18,7 @@ http:
         "storage_location": "/mnt/forensics/cases/2026_8841",
         "description": "Android device extraction for suspect smartphone",
         "notes": "Target device is a Samsung Galaxy S23 running Android 14",
-        "serial": "127.0.0.1:6555"
+        "device_serial": "127.0.0.1:6555"
       }
   auth: inherit
 
