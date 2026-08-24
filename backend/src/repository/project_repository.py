@@ -1,6 +1,6 @@
 import datetime
 from fastapi import HTTPException, status
-from models.project_model import ProjectMetadataModel
+from models.project_model import ProjectListItem, ProjectMetadataModel
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from lib.database import db_manager
 
@@ -33,3 +33,22 @@ class ProjectRepository:
         
         # model_validate safely converts dict data into the Pydantic model
         return ProjectMetadataModel.model_validate(inserted_doc)
+
+    async def list_projects(self) -> list[ProjectListItem]:
+        db_names = await db_manager.client.list_database_names()
+        projects: list[ProjectListItem] = []
+        for name in db_names:
+            if name.startswith("OpenAF_"):
+                project_id = name.removeprefix("OpenAF_")
+                db = db_manager.client[name]
+                collection = db["metadata"]
+                doc = await collection.find_one({}, {"title": 1, "case_number": 1})
+                if doc:
+                    projects.append(
+                        ProjectListItem(
+                            id=project_id,
+                            title=doc.get("title", ""),
+                            case_number=doc.get("case_number", "")
+                        )
+                    )
+        return projects

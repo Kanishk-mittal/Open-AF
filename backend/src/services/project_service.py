@@ -1,6 +1,6 @@
 import uuid
 from typing import Optional
-from models.project_model import ProjectMetadataCreate, ProjectMetadataModel
+from models.project_model import ProjectListItem, ProjectMetadataCreate, ProjectMetadataModel
 from repository.project_repository import ProjectRepository
 from services.project_init_service import ProjectInit
 
@@ -8,6 +8,9 @@ from services.project_init_service import ProjectInit
 class ProjectService:
     def __init__(self, repository: ProjectRepository):
         self.repository = repository
+
+    async def list_projects(self) -> list[ProjectListItem]:
+        return await self.repository.list_projects()
 
     async def initialize_project(
         self, 

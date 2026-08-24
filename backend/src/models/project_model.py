@@ -23,3 +23,8 @@ class ProjectMetadataModel(ProjectMetadataCreate):
         populate_by_name=True,
         arbitrary_types_allowed=True,
     )
+
+class ProjectListItem(BaseModel):
+    id: str
+    title: str
+    case_number: str
