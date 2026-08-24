@@ -1,0 +1,30 @@
+info:
+  name: Create Project
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseURL}}/api/v1/projects"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Operation Silent Falcon",
+        "examiner_name": "Det. John Doe",
+        "case_number": "CASE-2026-8841",
+        "contact_number": "+1-555-0192",
+        "organization": "Cyber Crime Division",
+        "storage_location": "/mnt/forensics/cases/2026_8841",
+        "description": "Android device extraction for suspect smartphone",
+        "notes": "Target device is a Samsung Galaxy S23 running Android 14",
+        "serial": "127.0.0.1:6555"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
