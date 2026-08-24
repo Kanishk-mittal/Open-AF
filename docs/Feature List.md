@@ -4,9 +4,9 @@
 	- [x] Project Creation
 	- [ ] Project Import
 	- [ ] Project Export
-	- [ ] Project Fetching
-	- [ ] Project Editing 
-	- [ ] Project Deletion
+	- [x] Project Fetching
+	- [x] Project Editing 
+	- [x] Project Deletion
 - [ ] initial extraction 
 	- [ ] device information 
 	- [ ] applications 

@@ -24,6 +24,22 @@ class ProjectMetadataModel(ProjectMetadataCreate):
         arbitrary_types_allowed=True,
     )
 
+class ProjectMetadataUpdate(BaseModel):
+    title: Optional[NonEmptyStr] = None
+    examiner_name: Optional[NonEmptyStr] = None
+    case_number: Optional[NonEmptyStr] = None
+    contact_number: Optional[NonEmptyStr] = None
+    organization: Optional[NonEmptyStr] = None
+    device_serial: Optional[NonEmptyStr] = None
+    description: Optional[str] = None
+    notes: Optional[str] = None
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+    )
+
+
 class ProjectListItem(BaseModel):
     id: str
     title: str

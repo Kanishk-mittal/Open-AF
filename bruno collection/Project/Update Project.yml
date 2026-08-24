@@ -1,0 +1,28 @@
+info:
+  name: Update Project
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseURL}}/api/v1/projects/:projectId"
+  params:
+    - name: projectId
+      value: ""
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Operation Silent Falcon - Updated",
+        "description": "Updated extraction notes and metadata",
+        "notes": "Evidence verified and extracted successfully"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

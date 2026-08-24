@@ -1,14 +1,14 @@
 info:
-  name: get project meta
+  name: Delete Project
   type: http
-  seq: 3
+  seq: 5
 
 http:
-  method: GET
+  method: DELETE
   url: "{{baseURL}}/api/v1/projects/:projectId"
   params:
     - name: projectId
-      value: ""
+      value: e2f59ebc-af1b-424a-abd4-ebeed4f827db
       type: path
   auth: inherit
 

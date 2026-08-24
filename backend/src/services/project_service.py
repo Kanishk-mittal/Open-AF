@@ -1,6 +1,11 @@
 import uuid
 from typing import Optional
-from models.project_model import ProjectListItem, ProjectMetadataCreate, ProjectMetadataModel
+from models.project_model import (
+    ProjectListItem,
+    ProjectMetadataCreate,
+    ProjectMetadataModel,
+    ProjectMetadataUpdate,
+)
 from repository.project_repository import ProjectRepository
 from services.project_init_service import ProjectInit
 
@@ -14,6 +19,18 @@ class ProjectService:
 
     async def get_project_metadata(self, project_id: str) -> ProjectMetadataModel:
         return await self.repository.get_project_metadata(project_id)
+
+    async def update_project_metadata(
+        self, 
+        project_id: str, 
+        payload: ProjectMetadataUpdate
+    ) -> ProjectMetadataModel:
+        update_data = payload.model_dump(exclude_unset=True)
+        return await self.repository.update_project_metadata(project_id, update_data)
+
+    async def delete_project(self, project_id: str) -> None:
+        await self.repository.delete_project(project_id)
+
 
 
     async def initialize_project(
