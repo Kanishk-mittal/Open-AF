@@ -1,0 +1,17 @@
+## Phase 1 (backend)
+- [x] list avaialbe devices
+- [ ] Project Lifecycle
+	- [x] Project Creation
+	- [ ] Project Import
+	- [ ] Project Export
+	- [ ] Project Fetching
+	- [ ] Project Editing 
+	- [ ] Project Deletion
+- [ ] initial extraction 
+	- [ ] device information 
+	- [ ] applications 
+	- [ ] accounts
+	- [ ] adb backup
+	- [ ] messages
+	- [ ] usage history
+	- [ ] sdcard data
