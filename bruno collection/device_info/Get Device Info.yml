@@ -1,11 +1,11 @@
 info:
-  name: get project meta
+  name: Get Device Info
   type: http
-  seq: 3
+  seq: 5
 
 http:
   method: GET
-  url: "{{baseURL}}/api/v1/projects/:projectID"
+  url: "{{baseURL}}/api/v1/device-info/:projectID"
   params:
     - name: projectID
       value: a168a5b5-7380-4cde-9418-df16a10c99d1

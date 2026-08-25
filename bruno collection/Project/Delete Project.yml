@@ -8,7 +8,7 @@ http:
   url: "{{baseURL}}/api/v1/projects/:projectId"
   params:
     - name: projectId
-      value: e2f59ebc-af1b-424a-abd4-ebeed4f827db
+      value: a168a5b5-7380-4cde-9418-df16a10c99d1
       type: path
   auth: inherit
 

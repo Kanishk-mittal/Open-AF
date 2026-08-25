@@ -17,6 +17,10 @@ register_exception_handlers(app)
 
 app.include_router(master_router_v1, prefix="/api/v1")
 
+from src.plugins.registry import PLUGINS
+for plugin in PLUGINS:
+    app.include_router(plugin.getRouter(), prefix="/api/v1")
+
 @app.get("/health")
 async def root():
     return {"message": "Backend is healthy!"}

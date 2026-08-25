@@ -1,15 +1,31 @@
 import datetime
 import re
-from typing import Optional
-from motor.motor_asyncio import AsyncIOMotorDatabase
-from lib.database import db_manager
 from models.device_model import TargetDeviceInformation
 from services.adb_service import adb_service
+from repository.project_repository import ProjectRepository
+from lib.database import db_manager
 
+class DeviceInfoService:
+    def __init__(self):
+        self.repository = ProjectRepository()
 
-class ProjectInit:
-    @staticmethod
-    def get_device_details(device_serial: str) -> TargetDeviceInformation:
+    async def save_device_info_for_project(self, project_id: str):
+        # Fetch project metadata to get the device_serial
+        metadata = await self.repository.get_project_metadata(project_id)
+        device_serial = metadata.device_serial
+        
+        if not device_serial:
+            return
+            
+        project_db = db_manager.client[f"OpenAF_{project_id}"]
+        device_info = self.get_device_details(device_serial)
+        
+        collection = project_db["device_info"]
+        doc = device_info.model_dump()
+        doc["created_at"] = datetime.datetime.now(datetime.timezone.utc)
+        await collection.insert_one(doc)
+
+    def get_device_details(self, device_serial: str) -> TargetDeviceInformation:
         def run_cmd(cmd: str) -> str:
             try:
                 res = adb_service.execute_shell(device_serial, cmd)
@@ -86,27 +102,3 @@ class ProjectInit:
             timezone=timezone,
             is_rooted=is_rooted,
         )
-
-    @staticmethod
-    async def save_device_info(device_serial: str, project_db: AsyncIOMotorDatabase) -> TargetDeviceInformation:
-        # 1. Fetch detailed device specs
-        device_info: TargetDeviceInformation = ProjectInit.get_device_details(device_serial)
-
-        # 2. Store in 'device_info' collection
-        collection = project_db["device_info"]
-        doc = device_info.model_dump()
-        doc["created_at"] = datetime.datetime.now(datetime.timezone.utc)
-
-        await collection.insert_one(doc)
-        return device_info
-
-    @staticmethod
-    async def init_project(project_id: str, device_serial: Optional[str] = None):
-        # 1. Get database handle for the project
-        project_db = db_manager.client[f"OpenAF_{project_id}"]
-
-        # 2. Save device info if serial provided
-        if device_serial:
-            await ProjectInit.save_device_info(device_serial, project_db)
-
-        return project_db

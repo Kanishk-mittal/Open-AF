@@ -10,7 +10,7 @@ http:
     type: json
     data: |-
       {
-        "archive_path": "/tmp/OpenAF_709a9209-f06b-4b5f-894f-b5dfaae18497_20260825_111500.zip"
+        "archive_path": "/home/kanishk/Downloads/OpenAF_709a9209-f06b-4b5f-894f-b5dfaae18497_20260825_113353.zip"
       }
   auth: inherit
 

@@ -14,7 +14,6 @@ from models.project_model import (
     ProjectMetadataUpdate,
 )
 from repository.project_repository import ProjectRepository
-from services.project_init_service import ProjectInit
 
 
 class ProjectService:
@@ -194,16 +193,13 @@ class ProjectService:
             metadata_data=metadata_dict
         )
 
-        # 3. Save target device information in 'device_info' collection if serial provided
-        if serial_to_use:
+        # 3. Call initialize on all registered plugins
+        from src.plugins.registry import PLUGINS
+        for plugin in PLUGINS:
             try:
-                db = self.repository.get_database(project_id)
-                await ProjectInit.save_device_info(device_serial=serial_to_use, project_db=db)
+                await plugin.initialize(project_id=project_id)
             except Exception as e:
-                print(f"Warning: Failed to capture device info for {serial_to_use}: {e}")
+                print(f"Warning: Plugin {plugin.name} failed to initialize for {project_id}: {e}")
 
-        # 4. Print initialization message to terminal
-        print(f"initializing project: OpenAF_{project_id}")
-
-        # 5. Return metadata along with ID
+        # 4. Return metadata along with ID
         return created_metadata
