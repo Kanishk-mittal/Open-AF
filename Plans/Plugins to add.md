@@ -1,0 +1,15 @@
+- [x] device information 
+	- [x] initial load
+	- [x] get endpoint
+- [ ] adb backup
+	- [ ] inital backup
+		- [ ] hash datbase for lookup with file size limit
+	- [ ] file system traversal
+	- [ ] export some file files
+	- [ ] hash based finding
+	- [ ] file viewing (have frontend till here as well)
+- [ ] applications (might go for sub plugins for some common apps)
+- [ ] accounts
+- [ ] messages
+- [ ] usage history
+- [ ] sdcard data
