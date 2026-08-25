@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from core.api_response import APIResponse
+from utils.response_utils import ResponseUtils
 from models.project_model import (
     ProjectListItem,
     ProjectMetadataCreate,
@@ -28,6 +29,19 @@ async def list_projects(
         success=True,
         message="Projects retrieved successfully.",
         data=projects
+    )
+
+@router.get("/{project_id}/export", status_code=status.HTTP_200_OK)
+async def export_project(
+    project_id: str,
+    destination_path: str = Query(..., description="Destination directory path to save the exported zip file"),
+    service: ProjectService = Depends(get_service)
+):
+    saved_path = await service.export_project(project_id, destination_path)
+    return ResponseUtils.success(
+        data={"export_path": saved_path},
+        message=f"Project exported successfully to {saved_path}",
+        status_code=status.HTTP_200_OK
     )
 
 @router.get("/{project_id}", response_model=APIResponse[ProjectMetadataModel], status_code=status.HTTP_200_OK)

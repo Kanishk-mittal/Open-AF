@@ -7,11 +7,5 @@
 	- [x] Project Fetching
 	- [x] Project Editing 
 	- [x] Project Deletion
-- [ ] initial extraction 
-	- [ ] device information 
-	- [ ] applications 
-	- [ ] accounts
-	- [ ] adb backup
-	- [ ] messages
-	- [ ] usage history
-	- [ ] sdcard data
+- [ ] plugin mech 
+	

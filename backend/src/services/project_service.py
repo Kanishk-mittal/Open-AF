@@ -1,5 +1,12 @@
+import os
+import shutil
+import tempfile
 import uuid
+import datetime
+import asyncio
 from typing import Optional
+from fastapi import HTTPException, status
+from config.config import settings
 from models.project_model import (
     ProjectListItem,
     ProjectMetadataCreate,
@@ -31,7 +38,70 @@ class ProjectService:
     async def delete_project(self, project_id: str) -> None:
         await self.repository.delete_project(project_id)
 
+    async def export_project(self, project_id: str, destination_path: str) -> str:
+        # 1. Verify project exists
+        await self.get_project_metadata(project_id)
 
+        # 2. Validate / prepare destination directory
+        resolved_dest_dir = os.path.abspath(destination_path)
+        try:
+            os.makedirs(resolved_dest_dir, exist_ok=True)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid destination directory: {e}"
+            )
+
+        db_name = f"OpenAF_{project_id}"
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        archive_name = f"{db_name}_{timestamp}"
+        target_zip_file = os.path.join(resolved_dest_dir, f"{archive_name}.zip")
+
+        # 3. Create temp directory for mongodump output
+        temp_dir = tempfile.mkdtemp(prefix="openaf_export_")
+        try:
+            cmd = [
+                "mongodump",
+                f"--uri={settings.MONGO_URL}",
+                f"--db={db_name}",
+                f"--out={temp_dir}"
+            ]
+
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+
+            if process.returncode != 0:
+                error_msg = stderr.decode() if stderr else "Unknown mongodump error"
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Failed to dump database: {error_msg}"
+                )
+
+            # Dump directory contains temp_dir/OpenAF_<project_id>
+            dump_source_path = os.path.join(temp_dir, db_name)
+            if not os.path.exists(dump_source_path):
+                # If mongodump produced output directly at temp_dir
+                dump_source_path = temp_dir
+
+            # 4. Zip the dump folder and write directly to destination
+            zip_base_name = os.path.join(resolved_dest_dir, archive_name)
+            shutil.make_archive(
+                base_name=zip_base_name,
+                format="zip",
+                root_dir=temp_dir,
+                base_dir=db_name if os.path.exists(os.path.join(temp_dir, db_name)) else None
+            )
+
+            return target_zip_file
+
+        finally:
+            # 5. Clean up temporary dump directory
+            if os.path.exists(temp_dir):
+                shutil.rmtree(temp_dir, ignore_errors=True)
 
     async def initialize_project(
         self, 
