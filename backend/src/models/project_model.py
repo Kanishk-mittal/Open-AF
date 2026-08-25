@@ -44,3 +44,7 @@ class ProjectListItem(BaseModel):
     id: str
     title: str
     case_number: str
+
+
+class ProjectImportRequest(BaseModel):
+    archive_path: NonEmptyStr

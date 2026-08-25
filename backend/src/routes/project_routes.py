@@ -6,6 +6,7 @@ from models.project_model import (
     ProjectMetadataCreate,
     ProjectMetadataModel,
     ProjectMetadataUpdate,
+    ProjectImportRequest,
 )
 from repository.project_repository import ProjectRepository
 from services.project_service import ProjectService
@@ -19,6 +20,18 @@ def get_repository() -> ProjectRepository:
 
 def get_service(repo: ProjectRepository = Depends(get_repository)) -> ProjectService:
     return ProjectService(repository=repo)
+
+@router.put("/import", status_code=status.HTTP_200_OK)
+async def import_project(
+    payload: ProjectImportRequest,
+    service: ProjectService = Depends(get_service)
+):
+    project_id = await service.import_project(payload.archive_path)
+    return ResponseUtils.success(
+        data={"project_id": project_id},
+        message=f"Project '{project_id}' imported successfully.",
+        status_code=status.HTTP_200_OK
+    )
 
 @router.get("", response_model=APIResponse[list[ProjectListItem]], status_code=status.HTTP_200_OK)
 async def list_projects(

@@ -1,0 +1,22 @@
+info:
+  name: Import Project
+  type: http
+  seq: 7
+
+http:
+  method: PUT
+  url: "{{baseURL}}/api/v1/projects/import"
+  body:
+    type: json
+    data: |-
+      {
+        "archive_path": "/tmp/OpenAF_709a9209-f06b-4b5f-894f-b5dfaae18497_20260825_111500.zip"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

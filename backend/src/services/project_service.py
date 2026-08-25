@@ -103,6 +103,78 @@ class ProjectService:
             if os.path.exists(temp_dir):
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
+    async def import_project(self, archive_path: str) -> str:
+        resolved_path = os.path.abspath(archive_path)
+
+        # 1. Validate file exists and is a file
+        if not os.path.exists(resolved_path) or not os.path.isfile(resolved_path):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Archive file not found: {archive_path}"
+            )
+
+        # 2. Temporary extraction directory
+        temp_dir = tempfile.mkdtemp(prefix="openaf_import_")
+        try:
+            try:
+                shutil.unpack_archive(resolved_path, temp_dir, "zip")
+            except Exception as e:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Invalid or corrupted zip archive: {e}"
+                )
+
+            # 3. Locate the OpenAF_<project_id> directory containing .bson files
+            found_db_dir = None
+            found_project_id = None
+
+            for root, dirs, files in os.walk(temp_dir):
+                dir_name = os.path.basename(root)
+                if dir_name.startswith("OpenAF_"):
+                    # Check if there are .bson files inside this directory
+                    if any(f.endswith(".bson") for f in files):
+                        found_db_dir = root
+                        found_project_id = dir_name.removeprefix("OpenAF_")
+                        break
+
+            if not found_db_dir or not found_project_id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="No valid OpenAF project database dump found in the archive."
+                )
+
+            # 4. Run mongorestore --drop with dump source directory
+            db_name = f"OpenAF_{found_project_id}"
+            parent_dir = os.path.dirname(found_db_dir)
+
+            cmd = [
+                "mongorestore",
+                f"--uri={settings.MONGO_URL}",
+                f"--nsInclude={db_name}.*",
+                "--drop",
+                parent_dir
+            ]
+
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+
+            if process.returncode != 0:
+                error_msg = stderr.decode() if stderr else "Unknown mongorestore error"
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Failed to restore database: {error_msg}"
+                )
+
+            return found_project_id
+
+        finally:
+            if os.path.exists(temp_dir):
+                shutil.rmtree(temp_dir, ignore_errors=True)
+
     async def initialize_project(
         self, 
         payload: ProjectMetadataCreate, 
