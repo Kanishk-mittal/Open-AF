@@ -11,50 +11,16 @@ interface ProjectCardProps {
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onDelete, onExport }) => {
   return (
-    <div
-      style={{
-        backgroundColor: 'var(--bg-card)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: '10px',
-        padding: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        transition: 'all 0.2s ease',
-        position: 'relative',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.borderColor = 'var(--forest-sage)';
-        e.currentTarget.style.backgroundColor = 'var(--bg-card-hover)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.borderColor = 'var(--border-subtle)';
-        e.currentTarget.style.backgroundColor = 'var(--bg-card)';
-      }}
-    >
+    <div className="bg-bg-card border border-border-subtle rounded-[10px] p-5 flex flex-col justify-between transition-all duration-200 relative shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:-translate-y-0.5 hover:border-forest-sage hover:bg-bg-card-hover group">
       <div>
         {/* Top Header info */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '8px',
-            backgroundColor: 'var(--forest-dark)',
-            border: '1px solid var(--forest-mid)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--yellow-chartreuse)',
-            flexShrink: 0
-          }}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="w-10 h-10 rounded-lg bg-forest-dark border border-forest-mid flex items-center justify-center text-yellow-chartreuse shrink-0">
             <Folder size={20} />
           </div>
 
           {/* Quick Actions (Export / Delete) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div className="flex items-center gap-1.5">
             {onExport && (
               <button
                 onClick={(e) => {
@@ -63,24 +29,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onDelete, onE
                   onExport(project.id);
                 }}
                 title="Export Project Archive"
-                style={{
-                  padding: '6px',
-                  borderRadius: '4px',
-                  backgroundColor: 'transparent',
-                  color: 'var(--khaki-soft)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'background 0.15s ease, color 0.15s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--forest-dark)';
-                  e.currentTarget.style.color = 'var(--yellow-cream)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = 'var(--khaki-soft)';
-                }}
+                className="p-1.5 rounded bg-transparent text-khaki-soft flex items-center justify-center transition-colors duration-150 hover:bg-forest-dark hover:text-yellow-cream cursor-pointer"
               >
                 <Upload size={15} />
               </button>
@@ -94,24 +43,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onDelete, onE
                   onDelete(project.id, project.title);
                 }}
                 title="Delete Project"
-                style={{
-                  padding: '6px',
-                  borderRadius: '4px',
-                  backgroundColor: 'transparent',
-                  color: 'var(--text-muted)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'background 0.15s ease, color 0.15s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#422020';
-                  e.currentTarget.style.color = '#FCA5A5';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = 'var(--text-muted)';
-                }}
+                className="p-1.5 rounded bg-transparent text-text-muted flex items-center justify-center transition-colors duration-150 hover:bg-[#422020] hover:text-red-300 cursor-pointer"
               >
                 <Trash2 size={15} />
               </button>
@@ -120,69 +52,26 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onDelete, onE
         </div>
 
         {/* Project Title */}
-        <h3 style={{
-          marginTop: '16px',
-          fontSize: '17px',
-          fontWeight: 600,
-          color: 'var(--text-primary)',
-          wordBreak: 'break-word',
-          lineHeight: 1.3
-        }}>
+        <h3 className="mt-4 text-[17px] font-semibold text-text-primary break-words leading-snug">
           {project.title}
         </h3>
 
         {/* Case Number Badge */}
-        <div style={{
-          marginTop: '12px',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '5px',
-          padding: '4px 10px',
-          borderRadius: '6px',
-          backgroundColor: 'var(--forest-dark)',
-          border: '1px solid var(--forest-mid)',
-          color: 'var(--yellow-cream)',
-          fontSize: '12px',
-          fontWeight: 500,
-          fontFamily: 'var(--mono)'
-        }}>
-          <Hash size={12} color="var(--yellow-chartreuse)" />
+        <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-forest-dark border border-forest-mid text-yellow-cream text-xs font-medium font-mono">
+          <Hash size={12} className="text-yellow-chartreuse" />
           <span>{project.case_number}</span>
         </div>
       </div>
 
       {/* Footer / Open Project Action */}
-      <div style={{
-        marginTop: '24px',
-        paddingTop: '16px',
-        borderTop: '1px solid var(--forest-dark)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--mono)' }}>
+      <div className="mt-6 pt-4 border-t border-forest-dark flex items-center justify-between">
+        <span className="text-[11px] text-text-muted font-mono">
           ID: {project.id.slice(0, 8)}...
         </span>
 
         <Link
           to={`/projects/${project.id}`}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '13px',
-            fontWeight: 600,
-            color: 'var(--yellow-chartreuse)',
-            transition: 'gap 0.15s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'var(--yellow-bright)';
-            e.currentTarget.style.gap = '8px';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'var(--yellow-chartreuse)';
-            e.currentTarget.style.gap = '6px';
-          }}
+          className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-yellow-chartreuse transition-all duration-150 hover:text-yellow-bright hover:gap-2"
         >
           <span>Open</span>
           <ArrowRight size={15} />
@@ -191,3 +80,4 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onDelete, onE
     </div>
   );
 };
+

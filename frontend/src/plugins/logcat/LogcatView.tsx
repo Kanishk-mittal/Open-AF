@@ -169,144 +169,82 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
     ? logs.filter((line) => line.toLowerCase().includes(filterText.toLowerCase()))
     : logs;
 
-  const getLogLineStyle = (line: string): React.CSSProperties => {
+  const getLogLineClass = (line: string): string => {
     if (line.includes(' E ') || line.includes(' E/') || line.startsWith('E/')) {
-      return { color: '#F87171' }; // Error Red
+      return 'text-red-400';
     }
     if (line.includes(' W ') || line.includes(' W/') || line.startsWith('W/')) {
-      return { color: '#FBBF24' }; // Warning Yellow
+      return 'text-amber-400';
     }
     if (line.includes(' I ') || line.includes(' I/') || line.startsWith('I/')) {
-      return { color: '#60A5FA' }; // Info Blue
+      return 'text-blue-400';
     }
     if (line.includes(' D ') || line.includes(' D/') || line.startsWith('D/')) {
-      return { color: '#34D399' }; // Debug Green
+      return 'text-emerald-400';
     }
     if (line.includes(' V ') || line.includes(' V/') || line.startsWith('V/')) {
-      return { color: '#9CA3AF' }; // Verbose Gray
+      return 'text-gray-400';
     }
-    return { color: 'var(--text-secondary)' };
+    return 'text-text-secondary';
   };
 
   if (loadingDevice) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '80px 20px',
-        gap: '12px',
-        color: 'var(--text-secondary)'
-      }}>
-        <Loader2 size={36} color="var(--yellow-chartreuse)" className="animate-spin" />
-        <p style={{ fontSize: '14px' }}>Connecting to device logcat stream...</p>
+      <div className="flex flex-col items-center justify-center py-20 px-5 gap-3 text-text-secondary">
+        <Loader2 size={36} className="text-yellow-chartreuse animate-spin" />
+        <p className="text-sm">Connecting to device logcat stream...</p>
       </div>
     );
   }
 
   if (error && !deviceSerial) {
     return (
-      <div style={{
-        padding: '24px',
-        borderRadius: '10px',
-        backgroundColor: '#2A1818',
-        border: '1px solid #7F1D1D',
-        color: '#FCA5A5',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '14px'
-      }}>
-        <AlertCircle size={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+      <div className="p-6 rounded-xl bg-[#2A1818] border border-red-900 text-red-300 flex items-start gap-3.5">
+        <AlertCircle size={24} className="shrink-0 mt-0.5" />
         <div>
-          <h4 style={{ margin: '0 0 6px', fontSize: '16px', fontWeight: 600 }}>Logcat Unavailable</h4>
-          <p style={{ margin: 0, fontSize: '13px', opacity: 0.9 }}>{error}</p>
+          <h4 className="m-0 mb-1.5 text-base font-semibold">Logcat Unavailable</h4>
+          <p className="m-0 text-[13px] opacity-90">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '16px' }}>
+    <div className="flex flex-col h-full gap-4">
       {/* Header Banner & Controls */}
-      <div style={{
-        backgroundColor: 'var(--bg-surface)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: '10px',
-        padding: '16px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '16px',
-        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
-        flexShrink: 0
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{
-            width: '44px',
-            height: '44px',
-            borderRadius: '10px',
-            backgroundColor: 'var(--forest-dark)',
-            border: '1px solid var(--green-accent)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--yellow-cream)',
-            flexShrink: 0
-          }}>
-            <Terminal size={22} color="var(--yellow-chartreuse)" />
+      <div className="bg-bg-surface border border-border-subtle rounded-[10px] p-4 md:px-5 flex items-center justify-between flex-wrap gap-4 shadow-[0_4px_14px_rgba(0,0,0,0.25)] shrink-0">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-lg bg-forest-dark border border-green-accent flex items-center justify-center text-yellow-cream shrink-0">
+            <Terminal size={22} className="text-yellow-chartreuse" />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-lg font-bold m-0 text-text-primary">
                 Live Logcat
               </h2>
-              <span style={{
-                fontSize: '11px',
-                padding: '2px 8px',
-                borderRadius: '12px',
-                backgroundColor: isStreaming ? 'rgba(92, 153, 90, 0.2)' : 'rgba(239, 68, 68, 0.15)',
-                border: isStreaming ? '1px solid var(--green-emerald)' : '1px solid #EF4444',
-                color: isStreaming ? 'var(--yellow-cream)' : '#FCA5A5',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}>
-                <span style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: isStreaming ? 'var(--yellow-chartreuse)' : '#EF4444'
-                }} />
+              <span className={`text-[11px] px-2 py-0.5 rounded-full font-semibold inline-flex items-center gap-1 border ${
+                isStreaming
+                  ? 'bg-green-emerald/20 border-green-emerald text-yellow-cream'
+                  : 'bg-red-500/15 border-red-500 text-red-300'
+              }`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${isStreaming ? 'bg-yellow-chartreuse' : 'bg-red-500'}`} />
                 {isStreaming ? 'STREAMING' : 'PAUSED'}
               </span>
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px', fontFamily: 'var(--mono)' }}>
+            <div className="text-xs text-text-secondary mt-0.5 font-mono">
               <span>{filteredLogs.length} / {logs.length} lines</span>
-              <span style={{ margin: '0 8px', color: 'var(--border-subtle)' }}>•</span>
+              <span className="mx-2 text-border-subtle">•</span>
               <span>Buffer: {maxQueueSize.toLocaleString()}</span>
             </div>
           </div>
         </div>
 
         {/* Action Toolbar */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <div className="flex items-center gap-2.5 flex-wrap">
           {/* Device Selector Dropdown */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'var(--bg-deep)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: '6px',
-            padding: '4px 10px',
-            fontSize: '12px',
-            color: 'var(--text-secondary)'
-          }}>
-            <Smartphone size={14} color="var(--yellow-chartreuse)" />
-            <span style={{ fontSize: '11px', color: 'var(--khaki-soft)', fontWeight: 500 }}>Device:</span>
+          <div className="flex items-center gap-1.5 bg-bg-deep border border-border-subtle rounded-md px-2.5 py-1 text-xs text-text-secondary">
+            <Smartphone size={14} className="text-yellow-chartreuse" />
+            <span className="text-[11px] text-khaki-soft font-medium">Device:</span>
             <select
               value={deviceSerial || ''}
               onChange={(e) => {
@@ -314,130 +252,71 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
                 setDeviceSerial(newSerial);
                 setLogs([]); // Clear logs for newly selected device
               }}
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: 'var(--yellow-chartreuse)',
-                fontSize: '12px',
-                fontFamily: 'var(--mono)',
-                outline: 'none',
-                cursor: 'pointer',
-                maxWidth: '180px'
-              }}
+              className="bg-transparent border-none text-yellow-chartreuse text-xs font-mono outline-none cursor-pointer max-w-[180px]"
             >
               {deviceSerial && !connectedDevices.some((d) => d.serial === deviceSerial) && (
-                <option value={deviceSerial} style={{ backgroundColor: '#131A17', color: '#FFF' }}>
+                <option value={deviceSerial} className="bg-bg-surface text-text-primary">
                   {deviceSerial} (Project Device)
                 </option>
               )}
               {connectedDevices.map((dev) => (
-                <option key={dev.serial} value={dev.serial} style={{ backgroundColor: '#131A17', color: '#FFF' }}>
+                <option key={dev.serial} value={dev.serial} className="bg-bg-surface text-text-primary">
                   {dev.model ? `${dev.model} (${dev.serial})` : dev.serial}
                 </option>
               ))}
             </select>
           </div>
+
           {/* Search/Filter Bar */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: 'var(--bg-deep)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: '6px',
-            padding: '4px 10px',
-            gap: '8px',
-            width: '180px'
-          }}>
-            <Search size={14} color="var(--khaki-soft)" />
+          <div className="flex items-center bg-bg-deep border border-border-subtle rounded-md px-2.5 py-1 gap-2 w-45">
+            <Search size={14} className="text-khaki-soft shrink-0" />
             <input
               type="text"
               placeholder="Filter logs..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                outline: 'none',
-                color: 'var(--text-primary)',
-                fontSize: '12px',
-                width: '100%',
-                fontFamily: 'var(--mono)'
-              }}
+              className="bg-transparent border-none outline-none text-text-primary text-xs w-full font-mono"
             />
           </div>
 
           {/* Buffer Queue Size Selector */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            backgroundColor: 'var(--bg-deep)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: '6px',
-            padding: '4px 8px',
-            fontSize: '12px',
-            color: 'var(--text-secondary)'
-          }}>
-            <span style={{ fontSize: '11px', color: 'var(--khaki-soft)' }}>Queue:</span>
+          <div className="flex items-center gap-1.5 bg-bg-deep border border-border-subtle rounded-md px-2 py-1 text-xs text-text-secondary">
+            <span className="text-[11px] text-khaki-soft">Queue:</span>
             <select
               value={maxQueueSize}
               onChange={(e) => setMaxQueueSize(Number(e.target.value))}
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: 'var(--yellow-chartreuse)',
-                fontSize: '12px',
-                fontFamily: 'var(--mono)',
-                outline: 'none',
-                cursor: 'pointer'
-              }}
+              className="bg-transparent border-none text-yellow-chartreuse text-xs font-mono outline-none cursor-pointer"
             >
-              <option value={1000} style={{ backgroundColor: '#131A17', color: '#FFF' }}>1,000</option>
-              <option value={2500} style={{ backgroundColor: '#131A17', color: '#FFF' }}>2,500</option>
-              <option value={5000} style={{ backgroundColor: '#131A17', color: '#FFF' }}>5,000</option>
-              <option value={10000} style={{ backgroundColor: '#131A17', color: '#FFF' }}>10,000</option>
-              <option value={25000} style={{ backgroundColor: '#131A17', color: '#FFF' }}>25,000</option>
-              <option value={50000} style={{ backgroundColor: '#131A17', color: '#FFF' }}>50,000</option>
+              <option value={1000} className="bg-bg-surface text-text-primary">1,000</option>
+              <option value={2500} className="bg-bg-surface text-text-primary">2,500</option>
+              <option value={5000} className="bg-bg-surface text-text-primary">5,000</option>
+              <option value={10000} className="bg-bg-surface text-text-primary">10,000</option>
+              <option value={25000} className="bg-bg-surface text-text-primary">25,000</option>
+              <option value={50000} className="bg-bg-surface text-text-primary">50,000</option>
             </select>
           </div>
 
           {/* Toggle Stream Button */}
           <button
             onClick={() => setIsStreaming(!isStreaming)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              backgroundColor: isStreaming ? 'rgba(239, 68, 68, 0.15)' : 'var(--forest-dark)',
-              border: isStreaming ? '1px solid #EF4444' : '1px solid var(--forest-sage)',
-              color: isStreaming ? '#FCA5A5' : 'var(--yellow-cream)',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors border ${
+              isStreaming
+                ? 'bg-red-500/15 border-red-500 text-red-300 hover:bg-red-500/25'
+                : 'bg-forest-dark border-forest-sage text-yellow-cream hover:bg-forest-mid'
+            }`}
           >
-            {isStreaming ? <Square size={13} fill="#EF4444" /> : <Play size={13} fill="var(--yellow-chartreuse)" />}
+            {isStreaming ? <Square size={13} className="fill-red-400 text-red-400" /> : <Play size={13} className="fill-yellow-chartreuse text-yellow-chartreuse" />}
             <span>{isStreaming ? 'Pause' : 'Resume'}</span>
           </button>
 
           {/* Auto Scroll Toggle */}
           <button
             onClick={() => setAutoScroll(!autoScroll)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              backgroundColor: autoScroll ? 'var(--forest-mid)' : 'var(--bg-deep)',
-              border: '1px solid var(--border-subtle)',
-              color: autoScroll ? 'var(--yellow-chartreuse)' : 'var(--text-secondary)',
-              fontSize: '12px',
-              fontWeight: 500,
-              cursor: 'pointer'
-            }}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-medium cursor-pointer transition-colors ${
+              autoScroll
+                ? 'bg-forest-mid border-border-subtle text-yellow-chartreuse'
+                : 'bg-bg-deep border-border-subtle text-text-secondary hover:bg-bg-card hover:text-text-primary'
+            }`}
             title="Auto-scroll to latest"
           >
             <ArrowDown size={13} />
@@ -447,19 +326,7 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
           {/* Clear Button */}
           <button
             onClick={handleClear}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--bg-deep)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-secondary)',
-              fontSize: '12px',
-              fontWeight: 500,
-              cursor: 'pointer'
-            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-bg-deep border border-border-subtle text-text-secondary text-xs font-medium cursor-pointer hover:bg-bg-card hover:text-text-primary transition-colors"
             title="Clear logs"
           >
             <Trash2 size={13} />
@@ -469,19 +336,7 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
           {/* Export Button */}
           <button
             onClick={handleExport}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--bg-deep)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-secondary)',
-              fontSize: '12px',
-              fontWeight: 500,
-              cursor: 'pointer'
-            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-bg-deep border border-border-subtle text-text-secondary text-xs font-medium cursor-pointer hover:bg-bg-card hover:text-text-primary transition-colors"
             title="Download logs"
           >
             <Download size={13} />
@@ -493,29 +348,15 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
       {/* Terminal Display */}
       <div
         ref={logContainerRef}
-        style={{
-          flex: 1,
-          minHeight: '400px',
-          backgroundColor: '#0A0E0C',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: '8px',
-          padding: '16px',
-          overflowY: 'auto',
-          fontFamily: 'var(--mono)',
-          fontSize: '12px',
-          lineHeight: '1.5',
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-all',
-          boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.4)'
-        }}
+        className="flex-1 min-h-[400px] bg-[#0A0E0C] border border-border-subtle rounded-lg p-4 overflow-y-auto font-mono text-xs leading-normal whitespace-pre-wrap break-all shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]"
       >
         {filteredLogs.length === 0 ? (
-          <div style={{ color: 'var(--text-muted)', textAlign: 'center', paddingTop: '40px' }}>
+          <div className="text-text-muted text-center pt-10">
             {filterText ? 'No log lines match current filter.' : 'Waiting for logcat output...'}
           </div>
         ) : (
           filteredLogs.map((line, idx) => (
-            <div key={idx} style={getLogLineStyle(line)}>
+            <div key={idx} className={getLogLineClass(line)}>
               {line}
             </div>
           ))
@@ -524,3 +365,4 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
     </div>
   );
 };
+

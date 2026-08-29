@@ -48,7 +48,6 @@ export const HomePage: React.FC = () => {
     setProjects((prev) => prev.filter((p) => p.id !== deleteTarget.id));
   };
 
-
   const handleExportProject = async (projectId: string) => {
     try {
       const { open } = await import('@tauri-apps/plugin-dialog');
@@ -94,7 +93,6 @@ export const HomePage: React.FC = () => {
     }
   };
 
-
   const filteredProjects = useMemo(() => {
     if (!searchQuery.trim()) return projects;
     const q = searchQuery.toLowerCase();
@@ -107,104 +105,54 @@ export const HomePage: React.FC = () => {
   }, [projects, searchQuery]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-deep)' }}>
+    <div className="min-h-screen flex flex-col bg-bg-deep">
       <Navbar
         onRefresh={fetchProjects}
         onNewProject={() => setIsModalOpen(true)}
         onImportProject={handleImportProject}
       />
 
-      <main style={{ flex: 1, maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '36px 24px' }}>
+      <main className="flex-1 max-w-[1200px] w-full mx-auto px-6 py-9">
         {/* Hero Section */}
-        <div style={{
-          marginBottom: '32px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              fontSize: '12px',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: 'var(--yellow-chartreuse)'
-            }}>
+        <div className="mb-8 flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-widest text-yellow-chartreuse">
               Forensics Workspace
             </span>
           </div>
-          <h1 style={{
-            fontSize: '32px',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.5px'
-          }}>
+          <h1 className="text-3xl font-bold text-text-primary tracking-tight">
             Investigation Projects
           </h1>
-          <p style={{
-            color: 'var(--text-secondary)',
-            fontSize: '15px',
-            maxWidth: '650px'
-          }}>
+          <p className="text-text-secondary text-[15px] max-w-[650px]">
             Manage case extractions, analyze connected Android devices, and inspect forensic artifacts.
           </p>
         </div>
 
         {/* Toolbar: Search and Filter */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '16px',
-          marginBottom: '28px',
-          flexWrap: 'wrap'
-        }}>
+        <div className="flex items-center justify-between gap-4 mb-7 flex-wrap">
           {/* Search Input */}
-          <div style={{
-            position: 'relative',
-            flex: '1',
-            maxWidth: '450px',
-            minWidth: '260px'
-          }}>
+          <div className="relative flex-1 max-w-[450px] min-w-[260px]">
             <Search
               size={18}
-              color="var(--text-muted)"
-              style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }}
+              className="text-text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
             />
             <input
               type="text"
               placeholder="Search by project title, case number, or ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '10px 12px 10px 38px',
-                backgroundColor: 'var(--bg-surface)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '8px',
-                color: 'var(--text-primary)',
-                outline: 'none',
-                transition: 'border-color 0.15s ease'
-              }}
-              onFocus={(e) => (e.target.style.borderColor = 'var(--forest-sage)')}
-              onBlur={(e) => (e.target.style.borderColor = 'var(--border-subtle)')}
+              className="w-full pl-9.5 pr-3 py-2.5 bg-bg-surface border border-border-subtle rounded-lg text-text-primary outline-none focus:border-forest-sage transition-colors"
             />
           </div>
 
           {/* Quick Count Stats */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            fontSize: '13px',
-            color: 'var(--text-secondary)'
-          }}>
+          <div className="flex items-center gap-3 text-[13px] text-text-secondary">
             <span>
-              Total Projects: <strong style={{ color: 'var(--yellow-cream)' }}>{projects.length}</strong>
+              Total Projects: <strong className="text-yellow-cream">{projects.length}</strong>
             </span>
             {searchQuery && (
               <span>
-                • Matching: <strong style={{ color: 'var(--yellow-bright)' }}>{filteredProjects.length}</strong>
+                • Matching: <strong className="text-yellow-bright">{filteredProjects.length}</strong>
               </span>
             )}
           </div>
@@ -212,48 +160,22 @@ export const HomePage: React.FC = () => {
 
         {/* Loading State */}
         {loading && (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '80px 20px',
-            gap: '12px',
-            color: 'var(--text-secondary)'
-          }}>
-            <Loader2 size={36} color="var(--yellow-chartreuse)" className="animate-spin" />
-            <p style={{ fontSize: '14px' }}>Loading projects...</p>
+          <div className="flex flex-col items-center justify-center py-20 px-5 gap-3 text-text-secondary">
+            <Loader2 size={36} className="text-yellow-chartreuse animate-spin" />
+            <p className="text-sm">Loading projects...</p>
           </div>
         )}
 
         {/* Error State */}
         {!loading && error && (
-          <div style={{
-            padding: '24px',
-            borderRadius: '10px',
-            backgroundColor: '#2A1818',
-            border: '1px solid #7F1D1D',
-            color: '#FCA5A5',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '14px',
-            marginBottom: '24px'
-          }}>
-            <AlertCircle size={24} style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div className="p-6 rounded-xl bg-[#2A1818] border border-red-900 text-red-300 flex items-start gap-3.5 mb-6">
+            <AlertCircle size={24} className="shrink-0 mt-0.5" />
             <div>
-              <h4 style={{ margin: '0 0 6px', fontSize: '15px', fontWeight: 600 }}>Failed to load projects</h4>
-              <p style={{ margin: 0, fontSize: '13px', opacity: 0.9 }}>{error}</p>
+              <h4 className="m-0 mb-1.5 text-[15px] font-semibold">Failed to load projects</h4>
+              <p className="m-0 text-[13px] opacity-90">{error}</p>
               <button
                 onClick={fetchProjects}
-                style={{
-                  marginTop: '12px',
-                  padding: '6px 14px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  borderRadius: '4px',
-                  color: '#FFFFFF',
-                  fontSize: '12px',
-                  fontWeight: 600
-                }}
+                className="mt-3 px-3.5 py-1.5 bg-white/10 rounded text-white text-xs font-semibold hover:bg-white/20 transition-colors cursor-pointer"
               >
                 Retry
               </button>
@@ -263,34 +185,15 @@ export const HomePage: React.FC = () => {
 
         {/* Empty State */}
         {!loading && !error && filteredProjects.length === 0 && (
-          <div style={{
-            padding: '60px 24px',
-            borderRadius: '12px',
-            backgroundColor: 'var(--bg-surface)',
-            border: '1px dashed var(--border-subtle)',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '16px'
-          }}>
-            <div style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '12px',
-              backgroundColor: 'var(--forest-dark)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--khaki-soft)'
-            }}>
+          <div className="py-15 px-6 rounded-xl bg-bg-surface border border-dashed border-border-subtle text-center flex flex-col items-center gap-4">
+            <div className="w-14 h-14 rounded-xl bg-forest-dark flex items-center justify-center text-khaki-soft">
               <FolderKanban size={28} />
             </div>
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 6px' }}>
+              <h3 className="text-lg font-semibold text-text-primary m-0 mb-1.5">
                 {searchQuery ? 'No matching projects found' : 'No investigation projects yet'}
               </h3>
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto' }}>
+              <p className="text-sm text-text-secondary max-w-[400px] mx-auto">
                 {searchQuery
                   ? `No project matched the filter "${searchQuery}". Try a different search term.`
                   : 'Start by creating your first forensic project to extract data from an Android device.'}
@@ -299,18 +202,7 @@ export const HomePage: React.FC = () => {
             {!searchQuery && (
               <button
                 onClick={() => setIsModalOpen(true)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 20px',
-                  borderRadius: '6px',
-                  backgroundColor: 'var(--green-emerald)',
-                  color: '#FFFFFF',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  marginTop: '8px'
-                }}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-md bg-green-emerald text-white text-[13px] font-semibold mt-2 hover:bg-green-accent transition-colors cursor-pointer"
               >
                 <Plus size={16} />
                 <span>Create New Project</span>
@@ -321,11 +213,7 @@ export const HomePage: React.FC = () => {
 
         {/* Project Grid */}
         {!loading && !error && filteredProjects.length > 0 && (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-            gap: '20px'
-          }}>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-5">
             {filteredProjects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -354,3 +242,4 @@ export const HomePage: React.FC = () => {
     </div>
   );
 };
+

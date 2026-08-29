@@ -41,17 +41,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: 'rgba(10, 12, 10, 0.8)',
-        backdropFilter: 'blur(5px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 110,
-        padding: '20px',
-      }}
+      className="fixed inset-0 bg-[#0A0C0A]/80 backdrop-blur-[5px] flex items-center justify-center z-[110] p-5"
       onClick={() => {
         if (!loading) {
           setConfirmInput('');
@@ -60,31 +50,14 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
       }}
     >
       <div
-        style={{
-          backgroundColor: 'var(--bg-surface)',
-          border: '1px solid #7F1D1D',
-          borderRadius: '12px',
-          width: '100%',
-          maxWidth: '500px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
-          overflow: 'hidden',
-        }}
+        className="bg-bg-surface border border-red-900 rounded-xl w-full max-w-[500px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div
-          style={{
-            padding: '18px 24px',
-            backgroundColor: '#2A1414',
-            borderBottom: '1px solid #451A1A',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#F87171' }}>
+        <div className="px-6 py-4.5 bg-[#2A1414] border-b border-[#451A1A] flex items-center justify-between">
+          <div className="flex items-center gap-2.5 text-red-400">
             <AlertTriangle size={22} />
-            <h3 style={{ margin: 0, fontSize: '17px', fontWeight: 600, color: '#FEE2E2' }}>
+            <h3 className="m-0 text-[17px] font-semibold text-red-100">
               Delete Project Approval
             </h3>
           </div>
@@ -95,28 +68,20 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
                 onClose();
               }
             }}
-            style={{
-              background: 'transparent',
-              color: '#F87171',
-              padding: '4px',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="bg-transparent text-red-400 p-1 rounded hover:text-red-200 transition-colors flex items-center justify-center cursor-pointer"
           >
             <X size={18} />
           </button>
         </div>
 
         {/* Content */}
-        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: 1.5, margin: 0 }}>
-            This action <strong style={{ color: '#F87171' }}>cannot be undone</strong>. This will permanently delete the project <strong style={{ color: 'var(--yellow-cream)' }}>"{projectName}"</strong> (ID: <code style={{ fontSize: '12px' }}>{projectId.slice(0, 8)}...</code>) and all associated extracted case data.
+        <div className="p-6 flex flex-col gap-4">
+          <p className="text-sm text-text-primary leading-normal m-0">
+            This action <strong className="text-red-400">cannot be undone</strong>. This will permanently delete the project <strong className="text-yellow-cream">"{projectName}"</strong> (ID: <code className="text-xs">{projectId.slice(0, 8)}...</code>) and all associated extracted case data.
           </p>
 
           <div>
-            <label style={{ display: 'block', fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+            <label className="block text-[13px] text-text-secondary mb-2">
               Type <strong>{projectName}</strong> to confirm deletion:
             </label>
             <input
@@ -124,46 +89,19 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
               value={confirmInput}
               onChange={(e) => setConfirmInput(e.target.value)}
               placeholder={projectName}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                backgroundColor: 'var(--bg-deep)',
-                border: '1px solid #7F1D1D',
-                borderRadius: '6px',
-                color: '#FEE2E2',
-                fontSize: '14px',
-                boxSizing: 'border-box',
-                outline: 'none',
-              }}
+              className="w-full px-3 py-2.5 bg-bg-deep border border-red-900 rounded-md text-red-100 text-sm outline-none focus:border-red-600 transition-colors"
               autoFocus
             />
           </div>
 
           {error && (
-            <div
-              style={{
-                padding: '10px 12px',
-                backgroundColor: '#3E1C1C',
-                border: '1px solid #7F1D1D',
-                borderRadius: '6px',
-                color: '#FCA5A5',
-                fontSize: '13px',
-              }}
-            >
+            <div className="px-3 py-2.5 bg-[#3E1C1C] border border-red-900 rounded-md text-red-300 text-[13px]">
               {error}
             </div>
           )}
 
           {/* Action Buttons */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              gap: '12px',
-              marginTop: '8px',
-            }}
-          >
+          <div className="flex items-center justify-end gap-3 mt-2">
             <button
               type="button"
               onClick={() => {
@@ -171,15 +109,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
                 onClose();
               }}
               disabled={loading}
-              style={{
-                padding: '9px 16px',
-                borderRadius: '6px',
-                backgroundColor: 'transparent',
-                border: '1px solid var(--forest-mid)',
-                color: 'var(--text-secondary)',
-                fontSize: '13px',
-                fontWeight: 500,
-              }}
+              className="px-4 py-2.5 rounded-md bg-transparent border border-forest-mid text-text-secondary text-[13px] font-medium hover:bg-forest-dark hover:text-text-primary transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -187,19 +117,11 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
               type="button"
               onClick={handleConfirmDelete}
               disabled={!isConfirmed || loading}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '9px 18px',
-                borderRadius: '6px',
-                backgroundColor: isConfirmed ? '#DC2626' : '#5C2222',
-                color: isConfirmed ? '#FFFFFF' : '#9CA3AF',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: isConfirmed && !loading ? 'pointer' : 'not-allowed',
-                transition: 'all 0.15s ease',
-              }}
+              className={`flex items-center gap-2 px-4.5 py-2.5 rounded-md text-[13px] font-semibold transition-all duration-150 ${
+                isConfirmed
+                  ? 'bg-red-600 text-white cursor-pointer hover:bg-red-700'
+                  : 'bg-[#5C2222] text-gray-400 cursor-not-allowed'
+              }`}
             >
               {loading ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
               <span>{loading ? 'Deleting...' : 'Permanently Delete'}</span>
@@ -210,3 +132,4 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
     </div>
   );
 };
+

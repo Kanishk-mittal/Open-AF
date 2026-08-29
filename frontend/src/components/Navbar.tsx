@@ -9,78 +9,32 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onRefresh, onNewProject, onImportProject }) => {
-
-
   return (
-    <header style={{
-      height: '64px',
-      backgroundColor: 'var(--bg-surface)',
-      borderBottom: '1px solid var(--border-subtle)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 28px',
-      position: 'sticky',
-      top: 0,
-      zIndex: 50
-    }}>
+    <header className="h-16 bg-bg-surface border-b border-border-subtle flex items-center justify-between px-7 sticky top-0 z-50">
       {/* Brand Logo & Name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '8px',
-          backgroundColor: 'var(--forest-dark)',
-          border: '1px solid var(--green-accent)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-        }}>
-          <Shield size={20} color="var(--yellow-chartreuse)" />
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-lg bg-forest-dark border border-green-accent flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
+          <Shield size={20} className="text-yellow-chartreuse" />
         </div>
         <div>
-          <Link to="/" style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-            <span style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '0.5px', color: 'var(--text-primary)' }}>
-              Open <span style={{ color: 'var(--yellow-chartreuse)' }}>AF</span>
+          <Link to="/" className="flex items-baseline gap-1.5">
+            <span className="text-lg font-bold tracking-[0.5px] text-text-primary">
+              Open <span className="text-yellow-chartreuse">AF</span>
             </span>
-            <span style={{
-              fontSize: '10px',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              backgroundColor: 'var(--forest-dark)',
-              color: 'var(--yellow-cream)',
-              padding: '2px 6px',
-              borderRadius: '4px',
-              fontWeight: 600
-            }}>
+            <span className="text-[10px] uppercase tracking-widest bg-forest-dark text-yellow-cream px-1.5 py-0.5 rounded font-semibold">
               Forensics
             </span>
           </Link>
         </div>
       </div>
 
-
       {/* Action Buttons */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div className="flex items-center gap-3">
         {onRefresh && (
           <button
             onClick={onRefresh}
             title="Refresh list"
-            style={{
-              padding: '8px 12px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--forest-dark)',
-              color: 'var(--text-secondary)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '13px',
-              border: '1px solid var(--border-subtle)',
-              transition: 'background 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--forest-mid)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--forest-dark)')}
+            className="px-3 py-2 rounded-md bg-forest-dark text-text-secondary flex items-center gap-1.5 text-[13px] border border-border-subtle hover:bg-forest-mid transition-colors duration-150 cursor-pointer"
           >
             <RefreshCw size={15} />
             <span>Refresh</span>
@@ -91,23 +45,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onRefresh, onNewProject, onImpor
           <button
             onClick={onImportProject}
             title="Import Project Archive (.zip)"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 14px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--forest-dark)',
-              border: '1px solid var(--forest-sage)',
-              color: 'var(--yellow-cream)',
-              fontWeight: 500,
-              fontSize: '13px',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--forest-mid)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--forest-dark)')}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-forest-dark border border-forest-sage text-yellow-cream font-medium text-[13px] hover:bg-forest-mid transition-all duration-150 cursor-pointer"
           >
-            <FolderInput size={15} color="var(--yellow-chartreuse)" />
+            <FolderInput size={15} className="text-yellow-chartreuse" />
             <span>Import</span>
           </button>
         )}
@@ -115,27 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onRefresh, onNewProject, onImpor
         {onNewProject && (
           <button
             onClick={onNewProject}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 18px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--green-emerald)',
-              color: '#FFFFFF',
-              fontWeight: 600,
-              fontSize: '13px',
-              boxShadow: '0 2px 6px rgba(92, 153, 90, 0.3)',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--green-accent)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--green-emerald)';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
+            className="flex items-center gap-1.5 px-4.5 py-2 rounded-md bg-green-emerald text-white font-semibold text-[13px] shadow-[0_2px_6px_rgba(92,153,90,0.3)] hover:bg-green-accent hover:-translate-y-0.5 transition-all duration-150 cursor-pointer"
           >
             <Plus size={16} />
             <span>New Project</span>
@@ -145,3 +65,4 @@ export const Navbar: React.FC<NavbarProps> = ({ onRefresh, onNewProject, onImpor
     </header>
   );
 };
+

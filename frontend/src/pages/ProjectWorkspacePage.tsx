@@ -43,55 +43,23 @@ export const ProjectWorkspacePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: 'var(--bg-deep)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '16px',
-        color: 'var(--text-secondary)'
-      }}>
-        <Loader2 size={40} color="var(--yellow-chartreuse)" className="animate-spin" />
-        <p style={{ fontSize: '15px' }}>Loading investigation workspace...</p>
+      <div className="min-h-screen bg-bg-deep flex flex-col items-center justify-center gap-4 text-text-secondary">
+        <Loader2 size={40} className="text-yellow-chartreuse animate-spin" />
+        <p className="text-[15px]">Loading investigation workspace...</p>
       </div>
     );
   }
 
   if (error || !project || !projectId) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: 'var(--bg-deep)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px'
-      }}>
-        <div style={{
-          padding: '28px',
-          borderRadius: '12px',
-          backgroundColor: '#2A1818',
-          border: '1px solid #7F1D1D',
-          maxWidth: '500px',
-          textAlign: 'center'
-        }}>
-          <AlertCircle size={36} color="#F87171" style={{ margin: '0 auto 12px' }} />
-          <h3 style={{ fontSize: '18px', color: '#FEE2E2', margin: '0 0 8px' }}>Project Not Found</h3>
-          <p style={{ fontSize: '14px', color: '#FCA5A5', margin: '0 0 20px' }}>{error || 'Project data could not be retrieved.'}</p>
+      <div className="min-h-screen bg-bg-deep flex flex-col items-center justify-center p-6">
+        <div className="p-7 rounded-xl bg-[#2A1818] border border-red-900 max-w-[500px] text-center">
+          <AlertCircle size={36} className="text-red-400 mx-auto mb-3" />
+          <h3 className="text-lg text-red-100 m-0 mb-2 font-semibold">Project Not Found</h3>
+          <p className="text-sm text-red-300 m-0 mb-5">{error || 'Project data could not be retrieved.'}</p>
           <Link
             to="/"
-            style={{
-              padding: '8px 18px',
-              backgroundColor: 'var(--forest-dark)',
-              color: 'var(--yellow-cream)',
-              borderRadius: '6px',
-              border: '1px solid var(--forest-sage)',
-              fontSize: '13px',
-              fontWeight: 600
-            }}
+            className="px-4.5 py-2 bg-forest-dark text-yellow-cream rounded-md border border-forest-sage text-[13px] font-semibold hover:bg-forest-mid transition-colors inline-block"
           >
             ← Return to Projects
           </Link>
@@ -101,107 +69,57 @@ export const ProjectWorkspacePage: React.FC = () => {
   }
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-deep)', overflow: 'hidden' }}>
+    <div className="h-screen flex flex-col bg-bg-deep overflow-hidden">
       {/* Top Navigation Bar */}
-      <header style={{
-        height: '60px',
-        backgroundColor: 'var(--bg-surface)',
-        borderBottom: '1px solid var(--border-subtle)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 24px',
-        flexShrink: 0
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <header className="h-[60px] bg-bg-surface border-b border-border-subtle flex items-center justify-between px-6 shrink-0">
+        <div className="flex items-center gap-4">
           <Link
             to="/"
             title="Back to All Projects"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              backgroundColor: 'var(--forest-dark)',
-              color: 'var(--yellow-cream)',
-              fontSize: '13px',
-              fontWeight: 500,
-              border: '1px solid var(--border-subtle)',
-              transition: 'background 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--forest-mid)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--forest-dark)')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-forest-dark text-yellow-cream text-[13px] font-medium border border-border-subtle hover:bg-forest-mid transition-colors"
           >
             <ArrowLeft size={16} />
             <span>Projects</span>
           </Link>
 
-          <div style={{ height: '20px', width: '1px', backgroundColor: 'var(--border-subtle)' }} />
+          <div className="h-5 w-px bg-border-subtle" />
 
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-            <h1 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+          <div className="flex items-baseline gap-2.5">
+            <h1 className="text-[17px] font-bold m-0 text-text-primary">
               {project.title}
             </h1>
-            <span style={{
-              fontSize: '12px',
-              fontFamily: 'var(--mono)',
-              color: 'var(--yellow-chartreuse)',
-              backgroundColor: 'var(--forest-dark)',
-              padding: '2px 8px',
-              borderRadius: '4px',
-              border: '1px solid var(--forest-mid)'
-            }}>
+            <span className="text-xs font-mono text-yellow-chartreuse bg-forest-dark px-2 py-0.5 rounded border border-forest-mid">
               #{project.case_number}
             </span>
           </div>
         </div>
 
         {/* Project Metadata Quick Badges */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <User size={13} color="var(--khaki-soft)" />
-            <span>Examiner: <strong style={{ color: 'var(--text-secondary)' }}>{project.examiner_name}</strong></span>
+        <div className="flex items-center gap-4 text-xs text-text-muted">
+          <div className="flex items-center gap-1.5">
+            <User size={13} className="text-khaki-soft" />
+            <span>Examiner: <strong className="text-text-secondary">{project.examiner_name}</strong></span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <HardDrive size={13} color="var(--khaki-soft)" />
-            <span style={{ fontFamily: 'var(--mono)' }}>{project.device_serial}</span>
+          <div className="flex items-center gap-1.5">
+            <HardDrive size={13} className="text-khaki-soft" />
+            <span className="font-mono">{project.device_serial}</span>
           </div>
         </div>
       </header>
 
       {/* Main Workspace Split (Left Sidebar + Right Content Area) */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar: Plugins List */}
-        <aside style={{
-          width: '260px',
-          backgroundColor: 'var(--bg-surface)',
-          borderRight: '1px solid var(--border-subtle)',
-          display: 'flex',
-          flexDirection: 'column',
-          flexShrink: 0
-        }}>
-          <div style={{
-            padding: '16px 20px',
-            borderBottom: '1px solid var(--border-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}>
-            <Shield size={16} color="var(--yellow-chartreuse)" />
-            <span style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: 'var(--text-secondary)'
-            }}>
+        <aside className="w-[260px] bg-bg-surface border-r border-border-subtle flex flex-col shrink-0">
+          <div className="px-5 py-4 border-b border-border-subtle flex items-center gap-2">
+            <Shield size={16} className="text-yellow-chartreuse" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-text-secondary">
               Forensic Modules
             </span>
           </div>
 
           {/* Plugin Items */}
-          <nav style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', overflowY: 'auto' }}>
+          <nav className="p-3 flex flex-col gap-1.5 overflow-y-auto">
             {FRONTEND_PLUGINS.map((plugin) => {
               const Icon = plugin.icon;
               const isActive = activePluginId === plugin.id;
@@ -210,51 +128,23 @@ export const ProjectWorkspacePage: React.FC = () => {
                 <button
                   key={plugin.id}
                   onClick={() => setActivePluginId(plugin.id)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    padding: '12px 14px',
-                    borderRadius: '8px',
-                    backgroundColor: isActive ? 'var(--forest-dark)' : 'transparent',
-                    color: isActive ? 'var(--yellow-cream)' : 'var(--text-secondary)',
-                    border: isActive ? '1px solid var(--forest-sage)' : '1px solid transparent',
-                    textAlign: 'left',
-                    transition: 'all 0.15s ease',
-                    cursor: 'pointer',
-                    position: 'relative'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.backgroundColor = 'var(--bg-card)';
-                      e.currentTarget.style.color = 'var(--text-primary)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = 'var(--text-secondary)';
-                    }
-                  }}
+                  className={`flex items-center gap-3 p-3 rounded-lg text-left transition-all duration-150 cursor-pointer relative border ${
+                    isActive
+                      ? 'bg-forest-dark text-yellow-cream border-forest-sage font-semibold'
+                      : 'bg-transparent text-text-secondary border-transparent hover:bg-bg-card hover:text-text-primary'
+                  }`}
                 >
-                  <div style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '6px',
-                    backgroundColor: isActive ? 'var(--forest-mid)' : 'var(--bg-deep)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: isActive ? 'var(--yellow-chartreuse)' : 'var(--khaki-soft)'
-                  }}>
+                  <div className={`w-8 h-8 rounded-md flex items-center justify-center ${
+                    isActive ? 'bg-forest-mid text-yellow-chartreuse' : 'bg-bg-deep text-khaki-soft'
+                  }`}>
                     <Icon size={18} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '13px', fontWeight: isActive ? 600 : 500 }}>
+                    <div className={`text-[13px] ${isActive ? 'font-semibold' : 'font-medium'}`}>
                       {plugin.name}
                     </div>
                     {plugin.category && (
-                      <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>
+                      <div className="text-[10px] text-text-muted uppercase tracking-wider mt-0.5">
                         {plugin.category}
                       </div>
                     )}
@@ -266,16 +156,11 @@ export const ProjectWorkspacePage: React.FC = () => {
         </aside>
 
         {/* Right Main Content Area: Active Plugin View */}
-        <main style={{
-          flex: 1,
-          backgroundColor: 'var(--bg-deep)',
-          overflowY: 'auto',
-          padding: '32px',
-        }}>
+        <main className="flex-1 bg-bg-deep overflow-y-auto p-8">
           {ActiveComponent ? (
             <ActiveComponent projectId={projectId} />
           ) : (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
+            <div className="text-center py-15 px-5 text-text-muted">
               Select a forensic module from the left sidebar.
             </div>
           )}
@@ -284,3 +169,4 @@ export const ProjectWorkspacePage: React.FC = () => {
     </div>
   );
 };
+
