@@ -1,5 +1,6 @@
 import type { IFrontendPlugin } from './pluginInterface';
 import { DeviceInfoPlugin } from './device_info';
+import { LogcatPlugin } from './logcat';
 
 /**
  * Frontend Plugin Registry
@@ -7,8 +8,10 @@ import { DeviceInfoPlugin } from './device_info';
  */
 export const FRONTEND_PLUGINS: IFrontendPlugin[] = [
   DeviceInfoPlugin,
+  LogcatPlugin,
 ];
 
 export function getPluginById(id: string): IFrontendPlugin | undefined {
   return FRONTEND_PLUGINS.find((p) => p.id === id);
 }
+
