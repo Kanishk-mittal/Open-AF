@@ -92,13 +92,33 @@ export const DeviceInfoView: React.FC<{ projectId: string }> = ({ projectId }) =
   }
 
   // Filter out internal MongoDB _id and extract entries
-  const entries = Object.entries(deviceInfo).filter(([key]) => key !== '_id');
+  const entries = Object.entries(deviceInfo).filter(([key]) => key !== '_id' && key !== 'created_at');
+
+  const getArtifactValue = (item: any): any => {
+    if (item && typeof item === 'object' && 'value' in item) {
+      return item.value;
+    }
+    return item;
+  };
+
+  const getArtifactSource = (item: any): string | null => {
+    if (item && typeof item === 'object' && 'source' in item) {
+      return item.source;
+    }
+    return null;
+  };
 
   const formatValue = (val: any): string => {
     if (val === null || val === undefined || val === '') return 'null';
     if (typeof val === 'boolean') return val ? 'true' : 'false';
     return String(val);
   };
+
+  const manufacturer = formatValue(getArtifactValue(deviceInfo.manufacturer)) !== 'null' ? getArtifactValue(deviceInfo.manufacturer) : 'Device';
+  const model = formatValue(getArtifactValue(deviceInfo.model)) !== 'null' ? getArtifactValue(deviceInfo.model) : '';
+  const androidVersion = formatValue(getArtifactValue(deviceInfo.android_version));
+  const adbSerial = formatValue(getArtifactValue(deviceInfo.adb_serial));
+  const isRooted = Boolean(getArtifactValue(deviceInfo.is_rooted));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -133,14 +153,14 @@ export const DeviceInfoView: React.FC<{ projectId: string }> = ({ projectId }) =
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <h2 style={{ fontSize: '22px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
-                {deviceInfo.manufacturer || 'Device'} {deviceInfo.model || ''}
+                {manufacturer} {model}
               </h2>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-              <span>Android {deviceInfo.android_version}</span>
+              <span>Android {androidVersion}</span>
               <span>•</span>
               <span style={{ fontFamily: 'var(--mono)', color: 'var(--yellow-chartreuse)' }}>
-                {deviceInfo.adb_serial}
+                {adbSerial}
               </span>
             </div>
           </div>
@@ -154,14 +174,14 @@ export const DeviceInfoView: React.FC<{ projectId: string }> = ({ projectId }) =
             gap: '8px',
             padding: '8px 16px',
             borderRadius: '20px',
-            backgroundColor: deviceInfo.is_rooted ? 'rgba(239, 68, 68, 0.15)' : 'rgba(92, 153, 90, 0.2)',
-            border: deviceInfo.is_rooted ? '1px solid #EF4444' : '1px solid var(--green-emerald)',
-            color: deviceInfo.is_rooted ? '#FCA5A5' : 'var(--yellow-cream)',
+            backgroundColor: isRooted ? 'rgba(239, 68, 68, 0.15)' : 'rgba(92, 153, 90, 0.2)',
+            border: isRooted ? '1px solid #EF4444' : '1px solid var(--green-emerald)',
+            color: isRooted ? '#FCA5A5' : 'var(--yellow-cream)',
             fontSize: '13px',
             fontWeight: 600
           }}>
-            {deviceInfo.is_rooted ? <ShieldAlert size={16} color="#EF4444" /> : <ShieldCheck size={16} color="var(--green-emerald)" />}
-            <span>{deviceInfo.is_rooted ? 'is_rooted: true' : 'is_rooted: false'}</span>
+            {isRooted ? <ShieldAlert size={16} color="#EF4444" /> : <ShieldCheck size={16} color="var(--green-emerald)" />}
+            <span>{isRooted ? 'is_rooted: true' : 'is_rooted: false'}</span>
           </div>
 
           <button
@@ -187,12 +207,14 @@ export const DeviceInfoView: React.FC<{ projectId: string }> = ({ projectId }) =
       {/* Dynamic Grid of Extracted Properties using Object.entries */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
         gap: '16px'
       }}>
-        {entries.map(([key, value]) => {
-          const formatted = formatValue(value);
-          const isNull = value === null || value === undefined || value === '';
+        {entries.map(([key, rawItem]) => {
+          const val = getArtifactValue(rawItem);
+          const source = getArtifactSource(rawItem);
+          const formatted = formatValue(val);
+          const isNull = val === null || val === undefined || val === '';
 
           return (
             <div
@@ -204,33 +226,74 @@ export const DeviceInfoView: React.FC<{ projectId: string }> = ({ projectId }) =
                 padding: '16px',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
-                gap: '8px',
+                gap: '10px',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
               }}
             >
-              {/* Raw Key Title from backend */}
+              {/* Artifact Key */}
               <div style={{
                 fontSize: '12px',
                 fontWeight: 600,
                 color: 'var(--khaki-soft)',
                 fontFamily: 'var(--mono)',
-                wordBreak: 'break-all'
+                wordBreak: 'break-all',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
               }}>
                 {key}
               </div>
 
-              {/* Value from response */}
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 500,
-                color: isNull ? 'var(--text-muted)' : 'var(--text-primary)',
-                fontFamily: 'var(--mono)',
-                wordBreak: 'break-all',
-                fontStyle: isNull ? 'italic' : 'normal'
-              }}>
-                {formatted}
+              {/* Artifact Value */}
+              <div>
+                <div style={{
+                  fontSize: '11px',
+                  color: 'var(--text-secondary)',
+                  marginBottom: '2px',
+                  fontWeight: 500
+                }}>
+                  Value
+                </div>
+                <div style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: isNull ? 'var(--text-muted)' : 'var(--text-primary)',
+                  fontFamily: 'var(--mono)',
+                  wordBreak: 'break-all',
+                  fontStyle: isNull ? 'italic' : 'normal'
+                }}>
+                  {formatted}
+                </div>
               </div>
+
+              {/* Artifact Source / Command */}
+              {source && (
+                <div style={{
+                  marginTop: 'auto',
+                  paddingTop: '8px',
+                  borderTop: '1px dashed var(--border-subtle)'
+                }}>
+                  <div style={{
+                    fontSize: '11px',
+                    color: 'var(--text-secondary)',
+                    marginBottom: '2px',
+                    fontWeight: 500
+                  }}>
+                    Source Command
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: 'var(--yellow-chartreuse)',
+                    fontFamily: 'var(--mono)',
+                    wordBreak: 'break-all',
+                    backgroundColor: 'var(--forest-dark)',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--border-subtle)'
+                  }}>
+                    {source}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
