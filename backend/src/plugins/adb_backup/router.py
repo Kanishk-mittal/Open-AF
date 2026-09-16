@@ -94,10 +94,12 @@ async def download_file_post(payload: FileDownloadRequest):
     local_path, filename = await service.get_file_for_download(
         project_id=payload.project_id, relative_path=payload.path
     )
+    import mimetypes
+    media_type, _ = mimetypes.guess_type(filename)
     return FileResponse(
         path=local_path,
         filename=filename,
-        media_type="application/octet-stream",
+        media_type=media_type or "application/octet-stream",
     )
 
 
@@ -110,10 +112,12 @@ async def download_file_get(
     local_path, filename = await service.get_file_for_download(
         project_id=project_id, relative_path=path
     )
+    import mimetypes
+    media_type, _ = mimetypes.guess_type(filename)
     return FileResponse(
         path=local_path,
         filename=filename,
-        media_type="application/octet-stream",
+        media_type=media_type or "application/octet-stream",
     )
 
 

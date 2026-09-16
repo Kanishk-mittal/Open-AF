@@ -18,3 +18,9 @@ class AdbBackupPlugin(IPlugin):
         to <storage_location>/backup/backup_<project_id>.ab.
         """
         await self.service.perform_initial_backup(project_id)
+
+    async def on_delete(self, project_id: str):
+        """
+        Cleans up and removes the backup file (.ab) and extracted data on project deletion.
+        """
+        await self.service.delete_backup_for_project(project_id)

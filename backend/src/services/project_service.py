@@ -35,6 +35,15 @@ class ProjectService:
         return await self.repository.update_project_metadata(project_id, update_data)
 
     async def delete_project(self, project_id: str) -> None:
+        # 1. Call on_delete on all registered plugins
+        from src.plugins.registry import PLUGINS
+        for plugin in PLUGINS:
+            try:
+                await plugin.on_delete(project_id=project_id)
+            except Exception as e:
+                print(f"Warning: Plugin {plugin.name} failed on_delete for {project_id}: {e}")
+
+        # 2. Delete project from repository
         await self.repository.delete_project(project_id)
 
     async def export_project(self, project_id: str, destination_path: str) -> str:

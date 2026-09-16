@@ -215,6 +215,38 @@ class AdbBackupService:
             doc["_id"] = str(doc["_id"])
         return doc
 
+    async def delete_backup_for_project(self, project_id: str) -> None:
+        """
+        Cleans up and deletes the backup (.ab) and extracted directory on host disk
+        when the project is deleted.
+        """
+        try:
+            project_db = db_manager.client[f"OpenAF_{project_id}"]
+            backup_doc = await project_db["backup"].find_one({})
+            metadata_doc = await project_db["metadata"].find_one({})
+
+            storage_location = metadata_doc.get("storage_location") if metadata_doc else None
+
+            if backup_doc:
+                extracted_path = backup_doc.get("extracted_path")
+                if extracted_path and os.path.exists(extracted_path):
+                    shutil.rmtree(extracted_path, ignore_errors=True)
+
+                file_path = backup_doc.get("file_path")
+                if file_path and os.path.exists(file_path):
+                    try:
+                        os.remove(file_path)
+                    except Exception:
+                        pass
+
+            if storage_location:
+                backup_dir = os.path.join(storage_location, "backup")
+                if os.path.exists(backup_dir):
+                    shutil.rmtree(backup_dir, ignore_errors=True)
+        except Exception as e:
+            print(f"Warning: Failed to cleanup backup files for project {project_id}: {e}")
+
+
     async def _get_extracted_dir(self, project_id: str) -> str:
         """Get the safe path to the project's extracted backup directory."""
         metadata = await self.repository.get_project_metadata(project_id)

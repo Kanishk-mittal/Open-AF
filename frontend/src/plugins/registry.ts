@@ -1,6 +1,7 @@
 import type { IFrontendPlugin } from './pluginInterface';
 import { DeviceInfoPlugin } from './device_info';
 import { LogcatPlugin } from './logcat';
+import { AdbBackupPlugin } from './adb_backup';
 
 /**
  * Frontend Plugin Registry
@@ -8,6 +9,7 @@ import { LogcatPlugin } from './logcat';
  */
 export const FRONTEND_PLUGINS: IFrontendPlugin[] = [
   DeviceInfoPlugin,
+  AdbBackupPlugin,
   LogcatPlugin,
 ];
 
