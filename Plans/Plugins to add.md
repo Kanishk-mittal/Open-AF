@@ -1,9 +1,10 @@
 - [x] device information 
 	- [x] initial load
 	- [x] get endpoint
+- [x] logcat
 - [ ] adb backup
-	- [ ] inital backup
-		- [ ] hash datbase for lookup with file size limit
+	- [ ] initial backup
+		- [ ] hash database for lookup with file size limit
 	- [ ] file system traversal
 	- [ ] export some file files
 	- [ ] hash based finding

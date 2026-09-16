@@ -119,11 +119,11 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-[#0A0C0A]/75 backdrop-blur-[4px] flex items-center justify-center z-[100] p-5"
+      className="fixed inset-0 bg-[#0A0C0A]/75 backdrop-blur-xs flex items-center justify-center z-100 p-5"
       onClick={onClose}
     >
       <div
-        className="bg-bg-surface border border-forest-sage rounded-xl w-full max-w-[660px] max-h-[90vh] overflow-y-auto shadow-[0_20px_40px_rgba(0,0,0,0.5)] flex flex-col"
+        className="bg-bg-surface border border-forest-sage rounded-xl w-full max-w-165 max-h-[90vh] overflow-y-auto shadow-[0_20px_40px_rgba(0,0,0,0.5)] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}

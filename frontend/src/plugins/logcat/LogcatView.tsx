@@ -252,7 +252,7 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
                 setDeviceSerial(newSerial);
                 setLogs([]); // Clear logs for newly selected device
               }}
-              className="bg-transparent border-none text-yellow-chartreuse text-xs font-mono outline-none cursor-pointer max-w-[180px]"
+              className="bg-transparent border-none text-yellow-chartreuse text-xs font-mono outline-none cursor-pointer max-w-45"
             >
               {deviceSerial && !connectedDevices.some((d) => d.serial === deviceSerial) && (
                 <option value={deviceSerial} className="bg-bg-surface text-text-primary">
@@ -348,7 +348,7 @@ export const LogcatView: React.FC<{ projectId: string }> = ({ projectId }) => {
       {/* Terminal Display */}
       <div
         ref={logContainerRef}
-        className="flex-1 min-h-[400px] bg-[#0A0E0C] border border-border-subtle rounded-lg p-4 overflow-y-auto font-mono text-xs leading-normal whitespace-pre-wrap break-all shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]"
+        className="flex-1 min-h-100 bg-[#0A0E0C] border border-border-subtle rounded-lg p-4 overflow-y-auto font-mono text-xs leading-normal whitespace-pre-wrap break-all shadow-[inset_0_2px_8px_rgba(0,0,0,0.4)]"
       >
         {filteredLogs.length === 0 ? (
           <div className="text-text-muted text-center pt-10">

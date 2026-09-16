@@ -8,7 +8,7 @@ http:
   url: "{{baseURL}}/api/v1/device-info/:projectID"
   params:
     - name: projectID
-      value: a168a5b5-7380-4cde-9418-df16a10c99d1
+      value: dea20d79-8882-4c86-97de-36f3be87d49f
       type: path
   auth: inherit
 

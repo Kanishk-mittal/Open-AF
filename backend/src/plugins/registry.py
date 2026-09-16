@@ -7,6 +7,6 @@ from plugins.plugin_interface import IPlugin
 
 PLUGINS: List[IPlugin] = [
     DeviceInfoPlugin(),
-    LogcatPlugin()
+    LogcatPlugin(),
 ]
 
