@@ -13,6 +13,7 @@ from models.project_model import (
     ProjectMetadataModel,
     ProjectMetadataUpdate,
 )
+from plugins.registry import PLUGINS
 from repository.project_repository import ProjectRepository
 
 
@@ -36,7 +37,6 @@ class ProjectService:
 
     async def delete_project(self, project_id: str) -> None:
         # 1. Call on_delete on all registered plugins
-        from src.plugins.registry import PLUGINS
         for plugin in PLUGINS:
             try:
                 await plugin.on_delete(project_id=project_id)
@@ -203,7 +203,6 @@ class ProjectService:
         )
 
         # 3. Call initialize on all registered plugins
-        from src.plugins.registry import PLUGINS
         for plugin in PLUGINS:
             try:
                 await plugin.initialize(project_id=project_id)
