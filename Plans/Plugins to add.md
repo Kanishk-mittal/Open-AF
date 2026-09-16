@@ -2,15 +2,14 @@
 	- [x] initial load
 	- [x] get endpoint
 - [x] logcat
-- [ ] adb backup
-	- [ ] initial backup
-		- [ ] hash database for lookup with file size limit
-	- [ ] file system traversal
-	- [ ] export some file files
-	- [ ] hash based finding
-	- [ ] file viewing (have frontend till here as well)
+- [x] adb backup
+	- [x] initial backup
+		- [x] hash database for lookup with file size limit
+	- [x] file system traversal
+	- [x] export some file files
+	- [x] hash based finding
+	- [x] file viewing (have frontend till here as well)
 - [ ] applications (might go for sub plugins for some common apps)
 - [ ] accounts
 - [ ] messages
 - [ ] usage history
-- [ ] sdcard data
