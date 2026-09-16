@@ -1,0 +1,23 @@
+info:
+  name: Stat File
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseURL}}/api/v1/backup/files/stat"
+  body:
+    type: json
+    data: |-
+      {
+        "project_id": "dea20d79-8882-4c86-97de-36f3be87d49f",
+        "path": "/shared/Download"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

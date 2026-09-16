@@ -1,0 +1,23 @@
+info:
+  name: Find Files by Hash
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseURL}}/api/v1/backup/files/find-by-hash"
+  body:
+    type: json
+    data: |-
+      {
+        "project_id": "dea20d79-8882-4c86-97de-36f3be87d49f",
+        "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

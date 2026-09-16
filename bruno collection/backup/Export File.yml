@@ -1,0 +1,24 @@
+info:
+  name: Export File
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseURL}}/api/v1/backup/files/export"
+  body:
+    type: json
+    data: |-
+      {
+        "project_id": "dea20d79-8882-4c86-97de-36f3be87d49f",
+        "path": "/shared/Download",
+        "destination_path": "/tmp/forensics_export"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

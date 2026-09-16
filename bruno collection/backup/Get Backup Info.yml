@@ -1,14 +1,14 @@
 info:
-  name: Delete Project
+  name: Get Backup Info
   type: http
-  seq: 5
+  seq: 1
 
 http:
-  method: DELETE
-  url: "{{baseURL}}/api/v1/projects/:projectId"
+  method: GET
+  url: "{{baseURL}}/api/v1/backup/:projectID"
   params:
-    - name: projectId
-      value: 2c1da14b-3948-4941-b597-82ea739b5fa5
+    - name: projectID
+      value: dea20d79-8882-4c86-97de-36f3be87d49f
       type: path
   auth: inherit
 

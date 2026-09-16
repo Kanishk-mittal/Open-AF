@@ -15,7 +15,7 @@ http:
         "case_number": "CASE-2026-8841",
         "contact_number": "+1-555-0192",
         "organization": "Cyber Crime Division",
-        "storage_location": "/mnt/forensics/cases/2026_8841",
+        "storage_location": "/home/kanishk/Downloads/projectData",
         "description": "Android device extraction for suspect smartphone",
         "notes": "Target device is a Samsung Galaxy S23 running Android 14",
         "device_serial": "127.0.0.1:6555"
