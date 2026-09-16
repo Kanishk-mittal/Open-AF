@@ -7,6 +7,7 @@ import asyncio
 from typing import Optional
 from fastapi import HTTPException, status
 from config.config import settings
+from errors import BadRequestError, DeviceNotFoundError
 from models.project_model import (
     ProjectListItem,
     ProjectMetadataCreate,
@@ -15,6 +16,7 @@ from models.project_model import (
 )
 from plugins.registry import PLUGINS
 from repository.project_repository import ProjectRepository
+from services.adb_service import adb_service
 
 
 class ProjectService:
@@ -188,26 +190,37 @@ class ProjectService:
         payload: ProjectMetadataCreate, 
         device_serial: Optional[str] = None
     ) -> ProjectMetadataModel:
-        # 1. Generate unique project ID
+        # 1. Validate device serial availability and connectivity via a simple 'ls' command
+        serial_to_use = device_serial or payload.device_serial
+        if not serial_to_use or not serial_to_use.strip():
+            raise BadRequestError(message="Device serial is required for project initialization.")
+
+        try:
+            adb_service.execute_shell(serial_to_use, "ls")
+        except Exception as e:
+            raise DeviceNotFoundError(
+                serial=serial_to_use,
+                message=f"Unable to connect to device '{serial_to_use}'"
+            )
+
+        # 2. Generate unique project ID
         project_id = str(uuid.uuid4())
 
         metadata_dict = payload.model_dump()
-        serial_to_use = device_serial or payload.device_serial
-        if serial_to_use is not None:
-            metadata_dict["device_serial"] = serial_to_use
+        metadata_dict["device_serial"] = serial_to_use
 
-        # 2. Forward payload to repository
+        # 3. Forward payload to repository
         created_metadata = await self.repository.create_project_metadata(
             project_id=project_id, 
             metadata_data=metadata_dict
         )
 
-        # 3. Call initialize on all registered plugins
+        # 4. Call initialize on all registered plugins
         for plugin in PLUGINS:
             try:
                 await plugin.initialize(project_id=project_id)
             except Exception as e:
                 print(f"Warning: Plugin {plugin.name} failed to initialize for {project_id}: {e}")
 
-        # 4. Return metadata along with ID
+        # 5. Return metadata along with ID
         return created_metadata
